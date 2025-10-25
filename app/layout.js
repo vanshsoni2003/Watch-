@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,10 +21,90 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <head>
+        <style>{`
+          @keyframes slideDown {
+            from {
+              transform: translateY(-100%);
+              opacity: 0;
+            }
+            to {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .animate-slideDown {
+            animation: slideDown 0.6s ease-out;
+          }
+
+          .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+          }
+
+          .nav-link {
+            position: relative;
+            display: inline-block;
+          }
+
+          .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #93c5fd;
+            transition: width 0.3s ease;
+          }
+
+          .nav-link:hover::after {
+            width: 100%;
+          }
+
+          .nav-link:hover {
+            color: #93c5fd;
+          }
+        `}</style>
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <nav className="p-4 bg-gray-900 flex justify-between items-center animate-slideDown">
+          <div className="h-[50px] flex items-center justify-center">
+            <TextHoverEffect text="Watch" />
+          </div>
+
+          <ul className="flex space-x-15 mr-52 text-white">
+            <li className="animate-fadeIn" style={{ animationDelay: "0.1s" }}>
+              <Link href="/" className="nav-link transition-colors duration-300">
+                Home
+              </Link>
+            </li>
+            <li className="animate-fadeIn" style={{ animationDelay: "0.2s" }}>
+              <Link href="/About" className="nav-link transition-colors duration-300">
+                About
+              </Link>
+            </li>
+            <li className="animate-fadeIn" style={{ animationDelay: "0.3s" }}>
+              <Link href="/Contact" className="nav-link transition-colors duration-300">
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <main>{children}</main>
       </body>
     </html>
   );
